@@ -105,3 +105,26 @@ Using only the Model would result in a monolithic structure that handles data re
 I’ve found Postman to be extremely useful for testing REST APIs because it allows quick creation and execution of HTTP requests. With features such as environment variables, collections, and automated test scripts, I can easily simulate scenarios (like product creation or subscriber notifications) and verify responses without writing additional client code. 
 
 #### Reflection Publisher-3
+
+**Observer Pattern has two variations: Push model (publisher pushes data to subscribers) and Pull model (subscribers pull data from publisher). In this tutorial case, which variation of Observer Pattern that we use?**
+
+In this tutorial, we use the Push model. The Publisher actively sends (pushes) notifications with all relevant data (e.g., event type and product details) to the Subscriber via an HTTP POST request.
+
+**What are the advantages and disadvantages of using the other variation of Observer Pattern for this tutorial case? (example: if you answer Q1 with Push, then imagine if we used Pull)**
+
+Advantages:
+- The Publisher is less coupled to the Subscriber.
+- Subscribers can pull data on their own schedule, possibly reducing network load if subscribers only request updates when needed.
+- It may be easier to handle large or continuously updating data sets because subscribers decide when to retrieve data.
+
+Disadvantages:
+- It introduces latency; subscribers may not be aware of an event until they poll for updates.
+- It requires additional mechanism for subscribers to know when to pull (e.g., using timestamps or versioning).
+- Increased network overhead may occur if subscribers poll too frequently.
+
+**Explain what will happen to the program if we decide to not use multi-threading in the notification process.**
+
+Without multi-threading, the notification process would be synchronous. That means each HTTP POST request to a Subscriber would block the main thread until it completes. As a result:
+- The response time for product updates may increase.
+- If a Subscriber is slow or unresponsive, it could delay notifications to others and reduce overall system throughput.
+- Overall, the program would be less scalable and responsive under high load.
