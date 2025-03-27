@@ -77,6 +77,7 @@ This is the place for you to write reflections:
 ### Mandatory (Publisher) Reflections
 
 #### Reflection Publisher-1
+
 **In the Observer pattern diagram explained by the Head First Design Pattern book, Subscriber is defined as an interface. Explain based on your understanding of Observer design patterns, do we still need an interface (or trait in Rust) in this BambangShop case, or a single Model struct is enough?**
 
 In the original Head First Design Patterns diagram, Subscriber is an interface so that various types of observers can be used interchangeably by the Publisher. In our BambangShop case, if all subscribers share the same behavior and data, you can use a single concrete model struct. However, if you foresee different kinds of subscribers or need polymorphic behavior (for example, different ways to process notifications), then defining a trait (Rust’s equivalent of an interface) would allow multiple implementations. For our simple use case, a single model struct is enough, but a trait would be beneficial for extensibility.
@@ -90,5 +91,17 @@ Since the design expects that the id (in Program) and url (in Subscriber) be uni
 Rust’s safety guarantees require proper synchronization for mutable global state. While a Singleton pattern can provide a single instance, you still need to ensure thread safety. DashMap is an external library that offers a concurrent map with built-in locking, which removes much of the manual work in implementing thread safety. Even if you implement a Singleton, you’d likely wrap its internals in synchronization primitives (like Mutex or RwLock). Therefore, using DashMap simplifies maintaining thread safety and is recommended compared to a plain Singleton without concurrency control.
 
 #### Reflection Publisher-2
+
+**In the Model-View Controller (MVC) compound pattern, there is no “Service” and “Repository”. Model in MVC covers both data storage and business logic. Explain based on your understanding of design principles, why we need to separate “Service” and “Repository” from a Model?**
+
+The Model in MVC represents the domain data and business rules, but it shouldn’t also handle data persistence or orchestration of complex business processes. By separating the Repository and Service layers, we adhere to the Single Responsibility Principle. The Repository is responsible solely for data access concerns (CRUD operations, persistence), while the Service layer encapsulates business logic (orchestrating workflows, validation, calling repositories, etc.). This separation makes the codebase more modular, easier to test, and maintain because each layer has a distinct responsibility.
+
+**What happens if we only use the Model? Explain your imagination on how the interactions between each model (Program, Subscriber, Notification) affect the code complexity for each model?**
+
+Using only the Model would result in a monolithic structure that handles data representation, business logic, and persistence—all squeezed into a single component. For our BambangShop case, this means that interactions among Program, Subscriber, and Notification would become tangled. For example, if a product update needs to notify subscribers, the Model would have to handle both the domain logic (the product’s state changes) and the communication logic (triggering notifications), increasing complexity. Such coupling makes it harder to maintain, extend, and test individual concerns without breaking others, potentially leading to a less flexible and more error-prone system.
+
+**Have you explored more about Postman? Tell us how this tool helps you to test your current work. You might want to also list which features in Postman you are interested in or feel like it is helpful to help your Group Project or any of your future software engineering projects.**
+
+I’ve found Postman to be extremely useful for testing REST APIs because it allows quick creation and execution of HTTP requests. With features such as environment variables, collections, and automated test scripts, I can easily simulate scenarios (like product creation or subscriber notifications) and verify responses without writing additional client code. 
 
 #### Reflection Publisher-3
